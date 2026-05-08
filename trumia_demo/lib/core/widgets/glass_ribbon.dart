@@ -88,18 +88,18 @@ class _RibbonPainter extends CustomPainter {
       }
       paint
         ..color = Color.lerp(
-          const Color(0x801FBF8E),
-          const Color(0x80A0C4D5),
+          const Color(0x281FBF8E),
+          const Color(0x28A0C4D5),
           (i / 7).clamp(0.0, 1.0),
         )!
-        ..strokeWidth = 1.6 + (i.isEven ? 0.8 : 0.0);
+        ..strokeWidth = 1.2 + (i.isEven ? 0.5 : 0.0);
       canvas.drawPath(path, paint);
     }
 
     final glow = Paint()
       ..shader = RadialGradient(
         colors: [
-          const Color(0x551FBF8E),
+          const Color(0x301FBF8E),
           const Color(0x00FFFFFF),
         ],
       ).createShader(Rect.fromCircle(center: center, radius: radius));

@@ -13,7 +13,7 @@ class TrumiaTypography {
     double letterSpacing = 0,
     double? height,
   }) {
-    return GoogleFonts.inter(
+    return GoogleFonts.notoSans(
       fontSize: size,
       fontWeight: weight,
       color: color,
@@ -90,14 +90,14 @@ class TrumiaTypography {
         color: TrumiaColors.textTertiary,
       );
 
-  static TextStyle get cardLogo => GoogleFonts.spaceMono(
+  static TextStyle get cardLogo => GoogleFonts.notoSansMono(
         fontSize: 22,
         fontWeight: FontWeight.w700,
         color: Colors.white,
         letterSpacing: 1.2,
       );
 
-  static TextStyle get cardNumber => GoogleFonts.spaceMono(
+  static TextStyle get cardNumber => GoogleFonts.notoSansMono(
         fontSize: 16,
         fontWeight: FontWeight.w500,
         color: Colors.white,

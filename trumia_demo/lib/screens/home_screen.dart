@@ -40,8 +40,12 @@ class HomeScreen extends StatelessWidget {
               const _CarouselDots(),
               const SizedBox(height: 22),
               const _ActionRow(),
-              const SizedBox(height: 22),
-              const _TransactionsPeek(),
+              const SizedBox(height: 16),
+              const _CardPeek(),
+              Transform.translate(
+                offset: const Offset(0, -12),
+                child: const _TransactionsPeek(),
+              ),
             ],
           ),
         ],
@@ -61,12 +65,9 @@ class _TopToolbar extends StatelessWidget {
         children: [
           const CircleIconButton(icon: Icons.person_outline_rounded),
           const Spacer(),
-          Transform.translate(
-            offset: const Offset(0, -4),
-            child: const CircleIconButton(
-              icon: Icons.credit_card_rounded,
-              elevated: true,
-            ),
+          const CircleIconButton(
+            icon: Icons.credit_card_rounded,
+            elevated: true,
           ),
           const Spacer(),
           const CircleIconButton(
@@ -209,19 +210,54 @@ class _ActionButton extends StatelessWidget {
     final fg = foreground ?? TrumiaColors.textPrimary;
     return SoftCard(
       onTap: onTap,
-      width: 105,
-      height: 96,
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      radius: 18,
+      width: 110,
+      height: 110,
+      padding: const EdgeInsets.symmetric(vertical: 18),
+      radius: 22,
       elevated: elevated,
       color: background,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, color: fg, size: 22),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           Text(label, style: TrumiaTypography.buttonLabel.copyWith(color: fg)),
         ],
+      ),
+    );
+  }
+}
+
+class _CardPeek extends StatelessWidget {
+  const _CardPeek();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => TrumiaShell.of(context).open(NavDirection.up),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          child: Container(
+            height: 28,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [TrumiaColors.cardTeal, TrumiaColors.cardTealDark],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x331FBF8E),
+                  offset: Offset(0, -6),
+                  blurRadius: 18,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
