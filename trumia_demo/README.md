@@ -77,7 +77,52 @@ ngrok http 8080
 Open the ngrok HTTPS URL in mobile Safari, then "Add to Home Screen" for a
 fullscreen, app-like experience.
 
-Alternative: GitHub Pages via a Flutter-web action targeting `build/web`.
+## Deploy
+
+### Vercel (recommended — push-to-deploy)
+
+`vercel.json` is already wired to install Flutter stable, run
+`flutter build web --release`, and serve `build/web`.
+
+One-time setup on vercel.com:
+
+1. **New Project** → import the GitHub repo `MiroslavArgument/free-claude-code`.
+2. **Root Directory** → set to `trumia_demo`.
+3. **Framework Preset** → "Other" (do not pick anything; `vercel.json` overrides).
+4. Leave Build / Output / Install commands empty — `vercel.json` provides them.
+5. Deploy. First build is ~3 min (clones Flutter SDK each time); subsequent
+   builds are similar — Vercel does not cache the SDK between builds. If you
+   want faster iterations, use the CLI flow below.
+
+After that, every push to the connected branch triggers a new deploy and
+gives you `https://<project>.vercel.app`.
+
+### Vercel CLI (fast iterations from your laptop)
+
+Requires Flutter installed locally and `npm i -g vercel`.
+
+```bash
+cd trumia_demo
+flutter build web --release
+cd build/web
+vercel --prod
+```
+
+This skips the SDK clone — Vercel just uploads the prebuilt static folder.
+
+### GitHub Pages (alternative, no Vercel needed)
+
+A workflow lives at `.github/workflows/deploy-trumia-pages.yml`. Enable
+Pages in repo settings → Source: **GitHub Actions** — done. URL will be
+`https://miroslavargument.github.io/free-claude-code/`. The `--base-href`
+in the workflow is set to match.
+
+### Build manually
+
+```bash
+flutter build web --release
+# output is in build/web/
+```
 
 ## File layout
 
