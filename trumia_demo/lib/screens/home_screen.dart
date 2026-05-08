@@ -6,7 +6,6 @@ import '../core/theme/typography.dart';
 import '../core/widgets/glass_ribbon.dart';
 import '../core/widgets/pill_button.dart';
 import '../core/widgets/soft_card.dart';
-import '../core/widgets/status_bar.dart';
 import '../data/mock_data.dart';
 import '../navigation/direction.dart';
 import '../navigation/shell.dart';
@@ -36,15 +35,15 @@ class HomeScreen extends StatelessWidget {
           ),
           Column(
             children: [
-              const FakeStatusBar(),
+              const SizedBox(height: 56),
               const _TopToolbar(),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
               const _HeroBalance(),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Text('Main euro', style: TrumiaTypography.heroSubtitle),
-              const SizedBox(height: 86),
+              const SizedBox(height: 72),
               const _CarouselDots(),
-              const SizedBox(height: 22),
+              const SizedBox(height: 20),
               const _ActionRow(),
               const Spacer(),
               const _TransactionsPeek(),
@@ -227,9 +226,9 @@ class _ActionButton extends StatelessWidget {
   }
 }
 
-/// Cards card peeking from above — most of the card sits off-screen, only the
-/// bottom edge is visible behind the top toolbar. The opacity follows the
-/// shell's "cards" controller (60% at rest → 100% as the card slides into view).
+/// Cards card edge peeking from above — only the bottom rim of the card is
+/// visible at the very top of the screen. Opacity follows the shell's "cards"
+/// controller (60% at rest → 100% as the card slides into view on swipe).
 class _TopCardsPeek extends StatelessWidget {
   const _TopCardsPeek();
 
@@ -245,22 +244,14 @@ class _TopCardsPeek extends StatelessWidget {
           final v = ctrl.value;
           final opacity = (0.6 + 0.4 * v).clamp(0.0, 1.0);
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: Transform.translate(
-              offset: const Offset(0, -120),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(20),
+              ),
               child: Container(
-                height: 220,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(28),
-                  color: TrumiaColors.cardTeal.withValues(alpha: opacity),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x14000000),
-                      offset: Offset(0, 8),
-                      blurRadius: 24,
-                    ),
-                  ],
-                ),
+                height: 24,
+                color: TrumiaColors.cardTeal.withValues(alpha: opacity),
               ),
             ),
           );
