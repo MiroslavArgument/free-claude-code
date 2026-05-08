@@ -34,7 +34,8 @@ class _DeviceFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
+    return Material(
+      type: MaterialType.canvas,
       color: const Color(0xFFE5E6E9),
       child: SafeArea(
         top: false,
