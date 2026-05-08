@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../core/theme/colors.dart';
@@ -20,9 +22,8 @@ class HomeScreen extends StatelessWidget {
       child: Stack(
         children: [
           const Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
+            top: -202,
+            left: 60,
             child: _TopCardsPeek(),
           ),
           const Positioned(
@@ -226,52 +227,37 @@ class _ActionButton extends StatelessWidget {
   }
 }
 
-/// Cards card peeking from above — the card sits mostly off-screen, rotated
-/// clockwise, so only its bottom-right rounded corner dips into view directly
-/// behind the centre toolbar icon. Opacity follows the shell's "cards"
-/// controller (60% at rest → 100% as the card slides into full view).
+/// Cards card peeking from above. Spec from Figma:
+///   size 286×172, radius 22, rotation 60°, position (x:60, y:-202).
+/// Rotation is around the layer's centre (Figma default).
+/// Opacity follows the shell's "cards" controller (60% at rest → 100%).
 class _TopCardsPeek extends StatelessWidget {
   const _TopCardsPeek();
 
   @override
   Widget build(BuildContext context) {
     final ctrl = TrumiaShell.of(context).controllerFor(NavDirection.up);
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => TrumiaShell.of(context).open(NavDirection.up),
-      child: AnimatedBuilder(
-        animation: ctrl,
-        builder: (context, _) {
-          final v = ctrl.value;
-          final opacity = (0.6 + 0.4 * v).clamp(0.0, 1.0);
-          return SizedBox(
-            height: 120,
-            child: ClipRect(
-              child: OverflowBox(
-                alignment: Alignment.topLeft,
-                maxWidth: double.infinity,
-                maxHeight: double.infinity,
-                minWidth: 0,
-                minHeight: 0,
-                child: Transform.translate(
-                  offset: const Offset(-220, -260),
-                  child: Transform.rotate(
-                    angle: 0.18, // ~10° clockwise so the right side dips
-                    child: Container(
-                      width: 460,
-                      height: 360,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(40),
-                        color: TrumiaColors.cardTeal.withValues(alpha: opacity),
-                      ),
-                    ),
-                  ),
-                ),
+    return AnimatedBuilder(
+      animation: ctrl,
+      builder: (context, _) {
+        final v = ctrl.value;
+        final opacity = (0.6 + 0.4 * v).clamp(0.0, 1.0);
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => TrumiaShell.of(context).open(NavDirection.up),
+          child: Transform.rotate(
+            angle: 60 * math.pi / 180,
+            child: Container(
+              width: 286,
+              height: 172,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                color: TrumiaColors.cardTeal.withValues(alpha: opacity),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
