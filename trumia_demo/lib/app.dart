@@ -36,65 +36,34 @@ class _DeviceFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       type: MaterialType.canvas,
-      color: const Color(0xFFE5E6E9),
-      child: SafeArea(
-        top: false,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            const targetW = 390.0;
-            const targetH = 844.0;
-            const targetRatio = targetW / targetH;
+      color: TrumiaColors.bgPrimary,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const targetW = 390.0;
+          const targetH = 844.0;
 
-            final w = constraints.maxWidth;
-            final h = constraints.maxHeight;
-            final fitNative = w <= targetW + 8 && (w / h - targetRatio).abs() < 0.05;
+          final w = constraints.maxWidth;
+          final h = constraints.maxHeight;
 
-            if (fitNative) {
-              return SizedBox(
-                width: w,
-                height: h,
-                child: ClipRect(child: child),
-              );
-            }
-
-            final ratio = w / h;
-            double frameW;
-            double frameH;
-            if (ratio > targetRatio) {
-              frameH = h.clamp(0, targetH).toDouble();
-              frameW = frameH * targetRatio;
-            } else {
-              frameW = w.clamp(0, targetW).toDouble();
-              frameH = frameW / targetRatio;
-            }
-
-            return Center(
-              child: Container(
-                width: frameW + 16,
-                height: frameH + 16,
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(48),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x33000000),
-                      offset: Offset(0, 24),
-                      blurRadius: 40,
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(40),
-                  child: ColoredBox(
-                    color: TrumiaColors.bgPrimary,
-                    child: SizedBox(width: frameW, height: frameH, child: child),
-                  ),
-                ),
-              ),
+          if (w <= targetW + 16) {
+            return SizedBox(
+              width: w,
+              height: h,
+              child: ClipRect(child: child),
             );
-          },
-        ),
+          }
+
+          final frameH = h.clamp(0.0, targetH);
+          return Center(
+            child: ClipRect(
+              child: SizedBox(
+                width: targetW,
+                height: frameH,
+                child: child,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

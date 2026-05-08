@@ -21,26 +21,26 @@ class HomeScreen extends StatelessWidget {
       child: Stack(
         children: [
           const Positioned(
-            left: 0,
-            right: 0,
-            top: 200,
+            left: -80,
+            right: -80,
+            top: 240,
             child: Center(
-              child: GlassRibbon(size: 540),
+              child: GlassRibbon(size: 560),
             ),
           ),
           Column(
             children: [
               const FakeStatusBar(),
               const _TopToolbar(),
-              const SizedBox(height: 30),
+              const SizedBox(height: 24),
               const _HeroBalance(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Text('Main euro', style: TrumiaTypography.heroSubtitle),
-              const SizedBox(height: 130),
+              const SizedBox(height: 86),
               const _CarouselDots(),
-              const SizedBox(height: 26),
+              const SizedBox(height: 22),
               const _ActionRow(),
-              const Spacer(),
+              const SizedBox(height: 22),
               const _TransactionsPeek(),
             ],
           ),
@@ -258,7 +258,10 @@ class _TransactionsPeek extends StatelessWidget {
             const SizedBox(height: 12),
             const _PeekTodayRow(),
             const SizedBox(height: 8),
-            const _PeekItem(),
+            for (var i = 0; i < mockTransactionGroups.first.items.length; i++) ...[
+              if (i > 0) const SizedBox(height: 8),
+              _PeekItem(item: mockTransactionGroups.first.items[i]),
+            ],
           ],
         ),
       ),
@@ -306,11 +309,12 @@ class _PeekTodayRow extends StatelessWidget {
 }
 
 class _PeekItem extends StatelessWidget {
-  const _PeekItem();
+  const _PeekItem({required this.item});
+
+  final MockTransaction item;
 
   @override
   Widget build(BuildContext context) {
-    final item = mockTransactionGroups.first.items.first;
     return SoftCard(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       radius: 16,
@@ -335,7 +339,14 @@ class _PeekItem extends StatelessWidget {
               ],
             ),
           ),
-          Text(item.amount, style: TrumiaTypography.amount),
+          Text(
+            item.amount,
+            style: TrumiaTypography.amount.copyWith(
+              color: item.isCredit
+                  ? TrumiaColors.accentGreen
+                  : TrumiaColors.textPrimary,
+            ),
+          ),
         ],
       ),
     );
