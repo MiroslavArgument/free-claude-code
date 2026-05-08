@@ -1,0 +1,11 @@
+{
+  "name": "Trumia",
+  "short_name": "Trumia",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F1F2F4",
+  "theme_color": "#F1F2F4",
+  "description": "Trumia navigation prototype",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false
+}
