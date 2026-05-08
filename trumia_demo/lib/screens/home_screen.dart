@@ -226,9 +226,10 @@ class _ActionButton extends StatelessWidget {
   }
 }
 
-/// Cards card edge peeking from above — only the bottom rim of the card is
-/// visible at the very top of the screen. Opacity follows the shell's "cards"
-/// controller (60% at rest → 100% as the card slides into view on swipe).
+/// Cards card peeking from above — the card sits mostly off-screen, rotated
+/// clockwise, so only its bottom-right rounded corner dips into view directly
+/// behind the centre toolbar icon. Opacity follows the shell's "cards"
+/// controller (60% at rest → 100% as the card slides into full view).
 class _TopCardsPeek extends StatelessWidget {
   const _TopCardsPeek();
 
@@ -243,15 +244,29 @@ class _TopCardsPeek extends StatelessWidget {
         builder: (context, _) {
           final v = ctrl.value;
           final opacity = (0.6 + 0.4 * v).clamp(0.0, 1.0);
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(20),
-              ),
-              child: Container(
-                height: 24,
-                color: TrumiaColors.cardTeal.withValues(alpha: opacity),
+          return SizedBox(
+            height: 120,
+            child: ClipRect(
+              child: OverflowBox(
+                alignment: Alignment.topLeft,
+                maxWidth: double.infinity,
+                maxHeight: double.infinity,
+                minWidth: 0,
+                minHeight: 0,
+                child: Transform.translate(
+                  offset: const Offset(-220, -260),
+                  child: Transform.rotate(
+                    angle: 0.18, // ~10° clockwise so the right side dips
+                    child: Container(
+                      width: 460,
+                      height: 360,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: TrumiaColors.cardTeal.withValues(alpha: opacity),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           );
