@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../theme/colors.dart';
@@ -50,16 +52,22 @@ class PillButton extends StatelessWidget {
   }
 }
 
+/// Circular icon button matching the Trumia design spec:
+///   - 40×40 outer circle, 24×24 inner icon container, ≤20 glyph
+///   - Background: white at 60% opacity
+///   - Drop shadow: y=4, blur=31, black at 12%
+///   - Approximated iOS "Liquid Glass" via BackdropFilter (frost ~4)
 class CircleIconButton extends StatelessWidget {
   const CircleIconButton({
     super.key,
     required this.icon,
     this.onTap,
-    this.size = 44,
+    this.size = 40,
     this.background,
     this.foreground,
     this.elevated = false,
     this.badge,
+    this.glyphSize = 20,
   });
 
   final IconData icon;
@@ -69,6 +77,7 @@ class CircleIconButton extends StatelessWidget {
   final Color? foreground;
   final bool elevated;
   final Widget? badge;
+  final double glyphSize;
 
   @override
   Widget build(BuildContext context) {
@@ -78,16 +87,42 @@ class CircleIconButton extends StatelessWidget {
       child: Container(
         width: size,
         height: size,
-        decoration: BoxDecoration(
-          color: background ?? TrumiaColors.surfaceElevated,
+        decoration: const BoxDecoration(
           shape: BoxShape.circle,
-          boxShadow: elevated ? trumiaElevatedShadow : trumiaPillShadow,
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x1F000000), // black at ~12%
+              offset: Offset(0, 4),
+              blurRadius: 31,
+            ),
+          ],
         ),
-        child: Center(
-          child: Icon(
-            icon,
-            size: size * 0.45,
-            color: foreground ?? TrumiaColors.textPrimary,
+        child: ClipOval(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: background ?? Colors.white.withValues(alpha: 0.6),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.45),
+                  width: 0.5,
+                ),
+              ),
+              child: Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: Center(
+                    child: Icon(
+                      icon,
+                      size: glyphSize.clamp(0, 20).toDouble(),
+                      color: foreground ?? TrumiaColors.textPrimary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),

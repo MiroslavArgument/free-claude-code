@@ -39,8 +39,8 @@ class _DeviceFrame extends StatelessWidget {
       color: TrumiaColors.bgPrimary,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          const targetW = 390.0;
-          const targetH = 844.0;
+          const targetW = 402.0;
+          const targetH = 874.0;
 
           final w = constraints.maxWidth;
           final h = constraints.maxHeight;

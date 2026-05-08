@@ -21,6 +21,12 @@ class HomeScreen extends StatelessWidget {
       child: Stack(
         children: [
           const Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _TopCardsPeek(),
+          ),
+          const Positioned(
             left: -80,
             right: -80,
             top: 240,
@@ -40,12 +46,8 @@ class HomeScreen extends StatelessWidget {
               const _CarouselDots(),
               const SizedBox(height: 22),
               const _ActionRow(),
-              const SizedBox(height: 16),
-              const _CardPeek(),
-              Transform.translate(
-                offset: const Offset(0, -12),
-                child: const _TransactionsPeek(),
-              ),
+              const Spacer(),
+              const _TransactionsPeek(),
             ],
           ),
         ],
@@ -65,10 +67,7 @@ class _TopToolbar extends StatelessWidget {
         children: [
           const CircleIconButton(icon: Icons.person_outline_rounded),
           const Spacer(),
-          const CircleIconButton(
-            icon: Icons.credit_card_rounded,
-            elevated: true,
-          ),
+          const CircleIconButton(icon: Icons.credit_card_rounded),
           const Spacer(),
           const CircleIconButton(
             icon: Icons.notifications_none_rounded,
@@ -228,36 +227,44 @@ class _ActionButton extends StatelessWidget {
   }
 }
 
-class _CardPeek extends StatelessWidget {
-  const _CardPeek();
+/// Cards card peeking from above — most of the card sits off-screen, only the
+/// bottom edge is visible behind the top toolbar. The opacity follows the
+/// shell's "cards" controller (60% at rest → 100% as the card slides into view).
+class _TopCardsPeek extends StatelessWidget {
+  const _TopCardsPeek();
 
   @override
   Widget build(BuildContext context) {
+    final ctrl = TrumiaShell.of(context).controllerFor(NavDirection.up);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => TrumiaShell.of(context).open(NavDirection.up),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          child: Container(
-            height: 28,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [TrumiaColors.cardTeal, TrumiaColors.cardTealDark],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0x331FBF8E),
-                  offset: Offset(0, -6),
-                  blurRadius: 18,
+      child: AnimatedBuilder(
+        animation: ctrl,
+        builder: (context, _) {
+          final v = ctrl.value;
+          final opacity = (0.6 + 0.4 * v).clamp(0.0, 1.0);
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 28),
+            child: Transform.translate(
+              offset: const Offset(0, -120),
+              child: Container(
+                height: 220,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(28),
+                  color: TrumiaColors.cardTeal.withValues(alpha: opacity),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x14000000),
+                      offset: Offset(0, 8),
+                      blurRadius: 24,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
